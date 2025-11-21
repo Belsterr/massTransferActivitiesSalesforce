@@ -1,0 +1,114 @@
+<template>
+    <div class="slds-box">
+        <template if:false={isModalOpen}>
+            <button class="slds-button slds-button_brand" onclick={openModal}>
+                 Transferir Atividades
+            </button>
+        </template>
+
+        <template if:true={isModalOpen}>
+            <div class="slds-modal slds-fade-in-open" role="dialog">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <h1 class="slds-text-heading_medium">Transferir Atividades</h1>
+                        <button class="slds-button slds-button_icon slds-modal__close" onclick={closeModal}>
+                            <svg class="slds-button__icon" viewBox="0 0 24 24">
+                                <path d="M18.8 4.2L4.2 18.8M4.2 4.2l14.6 14.6" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <!-- Tipo de Atividade -->
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <label class="slds-form-element__label">Tipo de Atividade</label>
+                            <div class="slds-select_container">
+                                <select class="slds-select" onchange={handleActivityTypeChange}>
+                                    <option value="">-- Selecione --</option>
+                                    <option value="Task">Tarefa</option>
+                                    <option value="Event">Compromisso</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Usuário Atual -->
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <label class="slds-form-element__label">Usuário Atual</label>
+                            <lightning-combobox
+                                name="currentUser"
+                                label="Selecione o usuário"
+                                value={currentUser}
+                                options={userOptions}
+                                onchange={handleCurrentUserChange}
+                                placeholder="Buscar usuário...">
+                            </lightning-combobox>
+                        </div>
+
+                        <!-- Data de Vencimento (Filtro Opcional) -->
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <label class="slds-form-element__label">Filtrar por Data de Vencimento (Opcional)</label>
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_1-of-2 slds-p-right_small">
+                                    <lightning-input
+                                        type="date"
+                                        label="De"
+                                        value={startDate}
+                                        onchange={handleStartDateChange}>
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="date"
+                                        label="Até"
+                                        value={endDate}
+                                        onchange={handleEndDateChange}>
+                                    </lightning-input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Novo Usuário -->
+                        <div class="slds-form-element slds-m-bottom_medium">
+                            <label class="slds-form-element__label">
+                                <span class="slds-required">*</span> Novo Usuário
+                            </label>
+                            <lightning-combobox
+                                name="newUser"
+                                label="Selecione o novo usuário"
+                                value={newUser}
+                                options={userOptions}
+                                onchange={handleNewUserChange}
+                                required
+                                placeholder="Buscar usuário...">
+                            </lightning-combobox>
+                        </div>
+
+                        <!-- Mensagem de Carregamento -->
+                        <template if:true={isLoading}>
+                            <div class="slds-align_absolute-center slds-m-vertical_medium">
+                                <lightning-spinner alternative-text="Carregando..." size="small"></lightning-spinner>
+                            </div>
+                        </template>
+
+                        <!-- Mensagem de Resultado -->
+                        <template if:true={message}>
+                            <div class={messageClass}>
+                                {message}
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeModal}>
+                            Cancelar
+                        </button>
+                        <button class="slds-button slds-button_brand" onclick={transferActivities} disabled={isTransferDisabled}>
+                            Transferir
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>
